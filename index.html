@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+</head>
+<body>
+    
+    <h1>Cloud Cafe</h1>
+
+    <div class="content">
+        
+        <form id="add-cafe-form">
+            <input type="text" name="name" placeholder="Cafename">
+            <input type="text" name="city" placeholder="Cafe city">
+            <button>Add Cafe</button>
+        </form>
+
+        <ul id="cafe-list"></ul>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            var Config = {
+                apiKey: "AIzaSyD3PrQH_du61M4xEbYZdwl9YiL43vpmn4M",
+                authDomain: "firestore-tut-8921b.firebaseapp.com",
+                databaseURL: "https://firestore-tut-8921b.firebaseio.com",
+                projectId: "firestore-tut-8921b",
+                storageBucket: "firestore-tut-8921b.appspot.com",
+                messagingSenderId: "260160790190",
+                appId: "1:260160790190:web:a6613caefc9d1f6f8d973f",
+                measurementId: "G-1DRHJVCPEZ"
+            };
+        // Initialize Firebase
+            firebase.initializeApp(Config);
+            firebase.analytics();
+            const db = firebase.firestore();
+    </script>
+
+<script src="app.js"></script>
+</body>
+</html>
