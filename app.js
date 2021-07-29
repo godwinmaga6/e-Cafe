@@ -1,69 +1,92 @@
-//Select dom element to display cafe list
-const cafeList = document.querySelector('#cafe-list');
-const form = document.querySelector('#add-cafe-form');
 
-//Grab a reference to the input form to add data to the database
+// START ORDER OF GETTING & RENDER DATA FROM THE DATABASE
+    // reference the DOM element to display the cafe from our Database
+    const cafeList = document.querySelector('#cafe-list');
 
-//using a Function, create html element, put the data inside them and render to the dom
-function renderCafe(doc){
-    let li = document.createElement('li');
-    let name = document.createElement('span');
-    let city = document.createElement('span');
-    //adding delete feature
-    let cross = document.createElement('div');
+    // start create elements and render documents function
+        function renderCafe(doc){
+            let li = document.createElement('li');
+            let name = document.createElement('span');
+            let city = document.createElement('span');
+            let deleteIcon = document.createElement('div'); //OPTIONAL
 
-    li.setAttribute('data-id', doc.id);
-    name.textContent = doc.data().name;
-    city.textContent = doc.data().city;
-    cross.textContent = 'X';
+            //create an attribute to contain doc id
+            li.setAttribute('data-id',doc.id);
 
-    //append name and city to the li
-    li.appendChild(name);
-    li.appendChild(city);
-    li.appendChild(cross);
-    //append li to cafeList in the dom
-    cafeList.appendChild(li);
+            //set the text contents
+            name.textContent = doc.data().name;
+            city.textContent = doc.data().city;
+            deleteIcon.textContent = 'x'; //OPTIONAL
 
-    //deleting data
-    cross.addEventListener('click', (e) => {
-        e.stopPropagation();
-        let id = e.target.parentElement.getAttribute('data-id');
-        db.collection('cafes').doc(id).delete();
-    })
-}
+            //append name and city to the li
+            li.appendChild(name);
+            li.appendChild(city);
+            li.appendChild(deleteIcon); //OPTIONAL
 
-//Get data collected from database
-// db.collection('cafes').orderBy('name').get().then((cafes) => {
-//     cafes.docs.forEach(doc => {
-//         renderCafe(doc);
-//     })
-// })
+            //append li to the cafeList (The ul)
+            cafeList.appendChild(li);
 
-//Real-time listener
-//Get data collected using using a listerner for real-time output
-db.collection('cafes').orderBy('city').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if(change.type == 'added'){
-            renderCafe(change.doc);
-        }else if (change.type == 'removed'){
-            let li = cafeList.querySelector('[data-id=' + change.doc.id + ']');
-            cafeList.removeChild(li);
+            //DELETE DATA FROM THE DATABASE (OPTIONAL)
+            deleteIcon.addEventListener('click', (e)=> {
+                e.stopPropagation(); //stops the event from bubbling up
+                let id = e.target.parentElement.getAttribute('data-id'); //get reference to the id of the parent element of the delete icon
+                DB.collection('cafes').doc(id).delete();
+            })
         }
+    // end create elements and render documents function
+
+    
+    //1st Get reference of the collections(Asynchronous request) which returns a promise
+    //2nd call the renderCafe() function within and pass in the doc
+    //CHOOSE EITHER: NOT REAL-TIME LISTENER OR: REAL-TIME LISTENER
+
+        // 1 **Not a real-time listener */
+            // DB.collection('cafes').get().then((snapshot)=>{
+            //     snapshot.docs.forEach(doc => {
+            //         console.log(doc.data());// .data() gets us the actual data from the document
+            //         renderCafe(doc);
+            //     })
+            // })
+        //END 1 **Not a real-time listener */
+
+        // 2 **Real-time listener */
+            DB.collection('cafes').orderBy('name').onSnapshot(snapshot => {
+                let changes = snapshot.docChanges(); //track changes        
+                // console.log(changes);
+                changes.forEach(change => {
+                    if(change.type == 'added'){
+                        renderCafe(change.doc);
+                    } else if (change.type == 'removed') {
+                        let li = cafeList.querySelector('[data-id=' + change.doc.id + ']');
+                        cafeList.removeChild(li);
+                    }
+                })
+            })
+        //END 2 **Real-time listener */
+
+// END ORDER OF GETTING & RENDER DATA FROM THE DATABASE
+
+
+
+
+
+
+// START ORDER OF ADDING DATA INTO THE DATABASE
+    // reference the DOM form element that will take the new inputs
+    const form = document.querySelector('#add-cafe-form');
+
+    // saving data
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        //get reference to the collection you want to add data to (in this case the "cafes")
+        DB.collection('cafes').add({
+            name: form.name.value,
+            city: form.city.value
+        }).then(()=> { //the .then promise may be removed, it just helps the form to be cleared if data was saved successfully without any errors And so that the form doesn't get cleared if form wasn't saved successfully. (If you wish to remove it make sure you add a semi colon to this line)
+            //clear the form after submit
+            form.name.value = '';
+            form.city.value = '';
+        });
+        
     })
-})
-
-
-//Saving data
-//listen for a Submit Event on the form, and fire off the data to firestore
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    //get reference to cafe collections
-    db.collection('cafes').add({
-        name: form.name.value,
-        city: form.city.value
-    }); 
-    //clear out field after the add button is clicked
-    form.name.value = '';
-    form.city.value = ''
-})
+// END ORDER OF ADDING DATA INTO THE DATABASE
