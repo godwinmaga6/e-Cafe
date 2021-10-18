@@ -79,14 +79,18 @@
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
         //get reference to the collection you want to add data to (in this case the "cafes")
-        DB.collection('cafes').add({
-            name: form.name.value,
-            city: form.city.value
-        }).then(()=> { //the .then promise may be removed, it just helps the form to be cleared if data was saved successfully without any errors And so that the form doesn't get cleared if form wasn't saved successfully. (If you wish to remove it make sure you add a semi colon to this line)
-            //clear the form after submit
-            form.name.value = '';
-            form.city.value = '';
-        });
+        if(form.name.value != ""){
+            DB.collection('cafes').add({
+                name: form.name.value,
+                city: form.city.value
+            }).then(()=> { //the .then promise may be removed, it just helps the form to be cleared if data was saved successfully without any errors And so that the form doesn't get cleared if form wasn't saved successfully. (If you wish to remove it make sure you add a semi colon to this line)
+                //clear the form after submit
+                form.name.value = '';
+                form.city.value = '';
+            });
+        }else {
+            alert('Input fields contains errors, or are empty!');
+        }
         
     })
 // END ORDER OF ADDING DATA INTO THE DATABASE
