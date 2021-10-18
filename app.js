@@ -1,5 +1,5 @@
 
-// START ORDER OF GETTING & RENDER DATA FROM THE DATABASE
+// START ORDER OF GETTING & RENDERING OF DATA FROM THE DATABASE
     // reference the DOM element to display the cafe from our Database
     const cafeList = document.querySelector('#cafe-list');
 
